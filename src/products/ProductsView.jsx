@@ -4,7 +4,6 @@ import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Toast } from 'primereact/toast';
 import { useRef } from 'react';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const ProductsView = ({ products, onDelete, onEdit }) => {
   const toast = useRef(null);
@@ -21,68 +20,58 @@ const ProductsView = ({ products, onDelete, onEdit }) => {
 
   const actionBodyTemplate = (rowData) => {
     return (
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         <Button 
           icon="pi pi-pencil" 
-          className="p-button-rounded p-button-success p-button-text-only"
+          className="p-button-rounded p-button-success p-button-sm"
           onClick={() => onEdit(rowData.id)}
           tooltip="Editar"
           tooltipOptions={{ position: 'top' }}
-          style={{ width: '1.5rem', height: '1.5rem' }}
         />
         <Button 
           icon="pi pi-trash" 
-          className="p-button-rounded p-button-danger p-button-text-only"
+          className="p-button-rounded p-button-danger p-button-sm"
           onClick={() => confirmDelete(rowData.id)}
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
-          style={{ width: '1.5rem', height: '1.5rem' }}
         />
       </div>
     );
   };
 
   const confirmDelete = (id) => {
-    confirmDialog({
-      message: '¿Estás seguro de eliminar este producto?',
-      header: 'Confirmación',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí',
-      rejectLabel: 'No',
-      accept: () => {
-        onDelete(id);
-        toast.current.show({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Producto eliminado',
-          life: 3000
-        });
-      }
-    });
+    if (window.confirm('¿Estás seguro de eliminar este producto?')) {
+      onDelete(id);
+      toast.current.show({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Producto eliminado',
+        life: 3000
+      });
+    }
   };
 
   return (
     <div className="grid p-fluid">
       <div className="col-12">
-        <Card header={header} className="shadow-2">
+        <Card className="shadow-2">
           <Toast ref={toast} />
-          <ConfirmDialog />
-          
           <DataTable 
             value={products} 
             scrollable 
             scrollHeight="flex"
             emptyMessage="No se encontraron productos"
+            header={header}
             tableStyle={{ minWidth: '50rem' }}
           >
-            <Column field="name" header="Nombre"></Column>
-            <Column field="price" header="Precio" body={priceBodyTemplate}></Column>
-            <Column field="category" header="Categoría"></Column>
+            <Column field="name" header="Nombre" />
+            <Column field="price" header="Precio" body={priceBodyTemplate} />
+            <Column field="category" header="Categoría" />
             <Column 
               header="Acciones" 
               body={actionBodyTemplate}
-              style={{ width: '90px' }}
-            ></Column>
+              style={{ width: '120px' }}
+            />
           </DataTable>
         </Card>
       </div>

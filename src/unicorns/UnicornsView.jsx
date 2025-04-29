@@ -24,6 +24,20 @@ const UnicornsView = ({
     </div>
   );
 
+  // Función para confirmar eliminación
+  const confirmDelete = (id) => {
+    if (window.confirm('¿Estás seguro de eliminar este unicornio?')) {
+      onDelete(id);
+      showToast('success', 'Éxito', 'Unicornio eliminado');
+    }
+  };
+
+  // Mostrar notificación
+  const showToast = (severity, summary, detail) => {
+    toast.current.show({ severity, summary, detail, life: 3000 });
+  };
+
+  // Plantilla de botones de acción
   const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex gap-2">
@@ -45,15 +59,15 @@ const UnicornsView = ({
     );
   };
 
-  const confirmDelete = (id) => {
-    if (window.confirm('¿Estás seguro de eliminar este unicornio?')) {
-      onDelete(id);
-      toast.current.show({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Unicornio eliminado',
-        life: 3000
-      });
+  // Manejar submit del formulario
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (editingId) {
+      onUpdate();
+      showToast('success', 'Éxito', 'Unicornio actualizado');
+    } else {
+      onCreate();
+      showToast('success', 'Éxito', 'Unicornio creado');
     }
   };
 
@@ -63,67 +77,67 @@ const UnicornsView = ({
         <Card title={header} className="shadow-2 mb-4">
           <Toast ref={toast} />
           
-          <div className="formgrid grid">
-            <div className="field col-12 md:col-3">
-              <InputText
-                name="name"
-                value={formData.name}
-                onChange={onChange}
-                className="w-full"
-                placeholder="Nombre"
-              />
-            </div>
-
-            <div className="field col-12 md:col-3">
-              <InputText
-                name="color"
-                value={formData.color}
-                onChange={onChange}
-                className="w-full"
-                placeholder="Color "
-              />
-            </div>
-
-            <div className="field col-12 md:col-2">
-              <InputText
-                name="age"
-                value={formData.age}
-                onChange={onChange}
-                className="w-full"
-                placeholder="Edad"
-              />
-            </div>
-
-            <div className="field col-12 md:col-2">
-              <InputText
-                name="power"
-                value={formData.power}
-                onChange={onChange}
-                className="w-full"
-                placeholder="Poder "
-              />
-            </div>
-
-            <div className="field col-12 md:col-2 flex align-items-end">
-              {editingId ? (
-                <Button 
-                  label="Actualizar"
-                  icon="pi pi-check"
-                  onClick={onUpdate}
+          {/* Formulario */}
+          <form onSubmit={handleSubmit}>
+            <div className="formgrid grid">
+              <div className="field col-12 md:col-3">
+                <InputText
+                  name="name"
+                  value={formData.name}
+                  onChange={onChange}
                   className="w-full"
+                  placeholder="Nombre"
+                  required
                 />
-              ) : (
+              </div>
+
+              <div className="field col-12 md:col-3">
+                <InputText
+                  name="color"
+                  value={formData.color}
+                  onChange={onChange}
+                  className="w-full"
+                  placeholder="Color"
+                  required
+                />
+              </div>
+
+              <div className="field col-12 md:col-2">
+                <InputText
+                  name="age"
+                  value={formData.age}
+                  onChange={onChange}
+                  className="w-full"
+                  placeholder="Edad"
+                  type="number"
+                  required
+                />
+              </div>
+
+              <div className="field col-12 md:col-2">
+                <InputText
+                  name="power"
+                  value={formData.power}
+                  onChange={onChange}
+                  className="w-full"
+                  placeholder="Poder"
+                  required
+                />
+              </div>
+
+              <div className="field col-12 md:col-2 flex align-items-end">
                 <Button 
-                  label="Crear"
-                  icon="pi pi-plus"
-                  onClick={onCreate}
-                  className="w-full p-button-secondary"
+                  type="submit"
+                  label={editingId ? "Actualizar" : "Crear"}
+                  icon={editingId ? "pi pi-check" : "pi pi-plus"}
+                  className={`w-full ${!editingId && "p-button-secondary"}`}
                 />
-              )}
+              </div>
             </div>
-          </div>
+          </form>
         </Card>
 
+        {/* Tabla de datos */}
         <Card className="shadow-2">
           <DataTable 
             value={unicorns} 
@@ -133,14 +147,15 @@ const UnicornsView = ({
             header={header}
             tableStyle={{ minWidth: '50rem' }}
           >
-            <Column field="name" header="Nombre" ></Column>
-            <Column field="color" header="Color" ></Column>
-            <Column field="age" header="Edad" ></Column>
-            <Column field="power" header="Poder"></Column>
+            <Column field="name" header="Nombre" sortable></Column>
+            <Column field="color" header="Color" sortable></Column>
+            <Column field="age" header="Edad" sortable></Column>
+            <Column field="power" header="Poder" sortable></Column>
             <Column 
               header="Acciones" 
               body={actionBodyTemplate}
               style={{ width: '120px' }}
+              exportable={false}
             ></Column>
           </DataTable>
         </Card>

@@ -1,5 +1,6 @@
 import { PrimeReactProvider } from 'primereact/api';
-import { Menubar, Button } from 'primereact/button'; // Asegúrate de importar Button
+import { Menubar } from 'primereact/menubar';
+import { Button } from 'primereact/button';
 import { Routes, Route, useNavigate } from "react-router-dom";
 import UnicornsContainer from "./unicorns/UnicornContainer";
 import ProductsPage from "./products";
@@ -21,12 +22,12 @@ function App() {
     },
     {
       label: 'Productos',
-      icon: 'pi pi-box', 
+      icon: 'pi pi-box',
       command: () => navigate('/products')
     },
     {
       label: 'Unicornios',
-      icon: 'pi pi-star', 
+      icon: 'pi pi-star',
       command: () => navigate('/unicorns')
     }
   ];
@@ -52,23 +53,10 @@ function App() {
       <div className="flex flex-column min-h-screen">
         <Menubar 
           model={navItems}
-          end={
-            <div className="flex gap-2">
-              {navItems.map((item, index) => (
-                <Button
-                  key={index}
-                  label={item.label}
-                  icon={item.icon}
-                  onClick={item.command}
-                  className="p-button-text"
-                />
-              ))}
-            </div>
-          }
           start={<span className="text-xl font-bold">Mi App</span>}
           className="shadow-2"
         />
-        
+
         <div className="flex-grow-1 p-4">
           <Routes>
             <Route path="/" element={<HomeView />} />
