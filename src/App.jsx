@@ -1,0 +1,111 @@
+import { PrimeReactProvider } from 'primereact/api';
+import { Menubar, Button } from 'primereact/button'; // Asegúrate de importar Button
+import { Routes, Route, useNavigate } from "react-router-dom";
+import UnicornsContainer from "./unicorns/UnicornContainer";
+import ProductsPage from "./products";
+import { UnicornProvider } from "./context/UnicornContext";
+import HomeView from "./home/HomeView";
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
+
+function App() {
+  const navigate = useNavigate();
+
+  const navItems = [
+    {
+      label: 'Inicio',
+      icon: 'pi pi-home',
+      command: () => navigate('/')
+    },
+    {
+      label: 'Productos',
+      icon: 'pi pi-box', 
+      command: () => navigate('/products')
+    },
+    {
+      label: 'Unicornios',
+      icon: 'pi pi-star', 
+      command: () => navigate('/unicorns')
+    }
+  ];
+
+  const footerItems = [
+    {
+      label: 'Términos y Condiciones',
+      command: () => navigate('/terms')
+    },
+    {
+      label: 'Política de Privacidad',
+      command: () => navigate('/privacy')
+    },
+    {
+      label: 'Contacto',
+      icon: 'pi pi-envelope',
+      command: () => navigate('/contact')
+    }
+  ];
+
+  return (
+    <PrimeReactProvider>
+      <div className="flex flex-column min-h-screen">
+        <Menubar 
+          model={navItems}
+          end={
+            <div className="flex gap-2">
+              {navItems.map((item, index) => (
+                <Button
+                  key={index}
+                  label={item.label}
+                  icon={item.icon}
+                  onClick={item.command}
+                  className="p-button-text"
+                />
+              ))}
+            </div>
+          }
+          start={<span className="text-xl font-bold">Mi App</span>}
+          className="shadow-2"
+        />
+        
+        <div className="flex-grow-1 p-4">
+          <Routes>
+            <Route path="/" element={<HomeView />} />
+            <Route
+              path="unicorns"
+              element={
+                <UnicornProvider>
+                  <UnicornsContainer />
+                </UnicornProvider>
+              }
+            />
+            <Route path="products" element={<ProductsPage />} />
+          </Routes>
+        </div>
+
+        <div className="surface-ground p-4 border-top-1 surface-border">
+          <div className="flex justify-content-between align-items-center">
+            <div className="flex align-items-center gap-3">
+              <span className="text-sm">© 2023 GCsoft</span>
+            </div>
+            <div className="flex gap-4">
+              {footerItems.map((item, index) => (
+                <a 
+                  key={index} 
+                  onClick={item.command} 
+                  className="cursor-pointer text-sm flex align-items-center gap-1"
+                >
+                  {item.icon && <i className={`pi ${item.icon}`}></i>}
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </PrimeReactProvider>
+  );
+}
+
+export default App;
