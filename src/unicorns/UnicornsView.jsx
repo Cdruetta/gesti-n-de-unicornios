@@ -5,6 +5,8 @@ import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Toast } from 'primereact/toast';
 import { useRef } from 'react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const UnicornsView = ({  
   unicorns,
@@ -18,26 +20,57 @@ const UnicornsView = ({
 }) => {
   const toast = useRef(null);
 
-  const header = (
-    <div className="flex justify-content-between align-items-center">
-      <span className="text-xl font-bold">Gestión de Unicornios</span>
-    </div>
-  );
-
-  // Función para confirmar eliminación
-  const confirmDelete = (id) => {
-    if (window.confirm('¿Estás seguro de eliminar este unicornio?')) {
-      onDelete(id);
-      showToast('success', 'Éxito', 'Unicornio eliminado');
-    }
+  // Función para exportar un unicornio individual a PDF
+  const exportUnicornToPDF = (unicorn) => {
+    const doc = new jsPDF();
+    
+    // Configuración del PDF
+    doc.setFontSize(16);
+    doc.setTextColor(40);
+    doc.text(`Ficha Técnica de ${unicorn.name}`, 15, 15);
+    
+    // Imagen de ejemplo (puedes reemplazarla)
+    doc.addImage(
+      '/public/logo.jpg',  
+      150,
+      10,
+      40,
+      40
+    );
+    
+    
+    // Datos del unicornio
+    rowData = {
+      name: unicorn.name,
+      color: unicorn.color,
+      age: unicorn.age,
+      power: unicorn.power
+    };
+    doc.setFontSize(12);
+    doc.text(`Nombre: ${unicorn.name}`, 15, 35);
+    doc.text(`Color: ${unicorn.color}`, 15, 45);
+    doc.text(`Edad: ${unicorn.age}`, 15, 55);
+    doc.text(`Poder: ${unicorn.power}`, 15, 65);
+    
+    // Guardar el documento
+    doc.save(`unicornio_${unicorn.name.replace(/\s+/g, '_')}.pdf`);
+    showToast('success', 'Éxito', `PDF de ${unicorn.name} generado`);
   };
 
-  // Mostrar notificación
-  const showToast = (severity, summary, detail) => {
-    toast.current.show({ severity, summary, detail, life: 3000 });
+  // Plantilla para el botón PDF individual
+  const pdfButtonTemplate = (rowData) => {
+    return (
+      <Button 
+        icon="pi pi-file-pdf"
+        className="p-button-rounded p-button-help p-button-sm"
+        onClick={() => exportUnicornToPDF(rowData)}
+        tooltip="Descargar PDF"
+        tooltipOptions={{ position: 'top' }}
+      />
+    );
   };
 
-  // Plantilla de botones de acción
+  // Plantilla de botones de acción (sin el PDF)
   const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex gap-2">
@@ -59,98 +92,29 @@ const UnicornsView = ({
     );
   };
 
-  // Manejar submit del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editingId) {
-      onUpdate();
-      showToast('success', 'Éxito', 'Unicornio actualizado');
-    } else {
-      onCreate();
-      showToast('success', 'Éxito', 'Unicornio creado');
-    }
-  };
+  // ... (resto de tus funciones existentes)
 
   return (
     <div className="grid p-fluid">
       <div className="col-12">
-        <Card title={header} className="shadow-2 mb-4">
-          <Toast ref={toast} />
-          
-          {/* Formulario */}
-          <form onSubmit={handleSubmit}>
-            <div className="formgrid grid">
-              <div className="field col-12 md:col-3">
-                <InputText
-                  name="name"
-                  value={formData.name}
-                  onChange={onChange}
-                  className="w-full"
-                  placeholder="Nombre"
-                  required
-                />
-              </div>
-
-              <div className="field col-12 md:col-3">
-                <InputText
-                  name="color"
-                  value={formData.color}
-                  onChange={onChange}
-                  className="w-full"
-                  placeholder="Color"
-                  required
-                />
-              </div>
-
-              <div className="field col-12 md:col-2">
-                <InputText
-                  name="age"
-                  value={formData.age}
-                  onChange={onChange}
-                  className="w-full"
-                  placeholder="Edad"
-                  type="number"
-                  required
-                />
-              </div>
-
-              <div className="field col-12 md:col-2">
-                <InputText
-                  name="power"
-                  value={formData.power}
-                  onChange={onChange}
-                  className="w-full"
-                  placeholder="Poder"
-                  required
-                />
-              </div>
-
-              <div className="field col-12 md:col-2 flex align-items-end">
-                <Button 
-                  type="submit"
-                  label={editingId ? "Actualizar" : "Crear"}
-                  icon={editingId ? "pi pi-check" : "pi pi-plus"}
-                  className={`w-full ${!editingId && "p-button-secondary"}`}
-                />
-              </div>
-            </div>
-          </form>
-        </Card>
-
-        {/* Tabla de datos */}
         <Card className="shadow-2">
           <DataTable 
             value={unicorns} 
             scrollable
             scrollHeight="flex"
             emptyMessage="No se encontraron unicornios"
-            header={header}
             tableStyle={{ minWidth: '50rem' }}
           >
-            <Column field="name" header="Nombre" sortable></Column>
-            <Column field="color" header="Color" sortable></Column>
-            <Column field="age" header="Edad" sortable></Column>
-            <Column field="power" header="Poder" sortable></Column>
+            <Column field="name" header="Nombre" ></Column>
+            <Column field="color" header="Color" ></Column>
+            <Column field="age" header="Edad" ></Column>
+            <Column field="power" header="Poder" ></Column>
+            <Column 
+              header="PDF" 
+              body={pdfButtonTemplate}
+              style={{ width: '80px' }}
+              exportable={false}
+            ></Column>
             <Column 
               header="Acciones" 
               body={actionBodyTemplate}
