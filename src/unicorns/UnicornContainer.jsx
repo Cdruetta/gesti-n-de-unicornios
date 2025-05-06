@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UnicornsView from './UnicornsView';
 
-const API_URL = "https://crudcrud.com/api/fa6f243821544769b992373e02df8a00/unicorns"; // Reemplaza con tu endpoint
+const API_URL = "https://crudcrud.com/api/8b5d73431c984e179cbd16b35fe3d375/unicorns"; // Reemplaza con tu endpoint
 
 const UnicornsContainer = () => { 
   const [unicorns, setUnicorns] = useState([]);

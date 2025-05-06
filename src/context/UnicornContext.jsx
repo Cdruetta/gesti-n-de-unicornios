@@ -10,7 +10,7 @@ export const UnicornProvider = ({ children }) => {
     const [toast, setToast] = useState(null);
 
     // URL de la API directamente en el código
-    const API_URL = 'https://crudcrud.com/api/2d4ee6caa4124296a4fbbfce5ab6bf3e/unicorns';
+    const API_URL = 'https://crudcrud.com/api/8b5d73431c984e179cbd16b35fe3d375/unicorns';
 
     // Configuración de axios
     const api = axios.create({
