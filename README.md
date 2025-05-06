@@ -1,4 +1,4 @@
-<h1 align="center">🦄 Gestión de Unicornios</h1>
+<h1 align="center">Gestión de Unicornios</h1>
 <p align="center">Una app mágica para administrar unicornios con estilo — construida con React + Vite + PrimeReact</p>
 
 <p align="center">
@@ -92,4 +92,3 @@ Código abierto bajo [MIT License](LICENSE).
 
 ---
 
-<p align="center">✨ Con 💜 y magia por Cdruetta ✨</p>
