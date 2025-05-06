@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import UnicornsView from './UnicornsView';
 
-const API_URL = "https://crudcrud.com/api/8b5d73431c984e179cbd16b35fe3d375/unicorns"; // Reemplaza con tu endpoint
+const API_URL = "https://crudcrud.com/api/bf74d26612d74301b57118fe50f75b76/unicorns"; // Reemplaza con tu endpoint
 
 const UnicornsContainer = () => { 
   const [unicorns, setUnicorns] = useState([]);
-  const [formData, setFormData] = useState({ name: "", color: "", age: "" });
+  const [formData, setFormData] = useState({ name: "", color: "", age: "", power: "" });
   const [editingId, setEditingId] = useState(null);
 
   // Cargar unicornios al inicio
@@ -18,6 +18,7 @@ const UnicornsContainer = () => {
     try {
       const response = await fetch(API_URL);
       const data = await response.json();
+      console.log("Unicornios obtenidos:", data); // Verifica que la respuesta esté correcta
       setUnicorns(data);
     } catch (error) {
       console.error("Error fetching unicorns:", error);
@@ -33,7 +34,7 @@ const UnicornsContainer = () => {
         body: JSON.stringify(formData),
       });
       fetchUnicorns(); // Recargar lista
-      setFormData({ name: "", color: "", age: "" }); // Limpiar formulario
+      setFormData({ name: "", color: "", age: "", power: "" }); // Limpiar formulario
     } catch (error) {
       console.error("Error creating unicorn:", error);
     }
@@ -49,7 +50,7 @@ const UnicornsContainer = () => {
       });
       fetchUnicorns(); // Recargar lista
       setEditingId(null); // Salir del modo edición
-      setFormData({ name: "", color: "", age: "" }); // Limpiar formulario
+      setFormData({ name: "", color: "", age: "", power: "" }); // Limpiar formulario
     } catch (error) {
       console.error("Error updating unicorn:", error);
     }
@@ -58,8 +59,9 @@ const UnicornsContainer = () => {
   // DELETE: Eliminar unicornio
   const onDelete = async (id) => {
     try {
+      console.log("Eliminando unicornio con id:", id); // Verifica que el id sea correcto
       await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      fetchUnicorns(); // Recargar lista
+      fetchUnicorns(); // Recargar lista después de la eliminación
     } catch (error) {
       console.error("Error deleting unicorn:", error);
     }
@@ -79,6 +81,7 @@ const UnicornsContainer = () => {
       name: unicorn.name,
       color: unicorn.color,
       age: unicorn.age,
+      power: unicorn.power,
     });
     setEditingId(unicorn._id); // CRUDCRUD usa "_id" como clave
   };

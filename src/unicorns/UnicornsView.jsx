@@ -30,7 +30,7 @@ const UnicornsView = ({
 
   const confirmDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este unicornio?')) {
-      onDelete(id);
+      onDelete(id);  // Llamada a la función de eliminación
       toast.current?.show({
         severity: 'success',
         summary: 'Éxito',
@@ -89,7 +89,7 @@ const UnicornsView = ({
       <Button
         icon="pi pi-trash"
         className="p-button-rounded p-button-danger p-button-sm"
-        onClick={() => confirmDelete(rowData.id)}
+        onClick={() => confirmDelete(rowData.id)}  // Confirmar y eliminar
         tooltip="Eliminar"
       />
     </div>
@@ -99,7 +99,7 @@ const UnicornsView = ({
     <div className="grid p-fluid">
       <Toast ref={toast} />
 
-      {/* Formulario de creación/edición de unicornio - Arriba */}
+      {/* Formulario de creación/edición de unicornio */}
       <div className="col-12 flex justify-content-center">
         <Card className="shadow-2 p-fluid mb-4" style={{ maxWidth: '500px' }}>
           <h3>{editingId ? 'Editar Unicornio' : 'Nuevo Unicornio'}</h3>
@@ -145,7 +145,7 @@ const UnicornsView = ({
             <div className="col-12 flex justify-content-end">
               <Button 
                 label={editingId ? 'Actualizar Unicornio' : 'Crear Unicornio'} 
-                icon="pi pi-plus" 
+                icon="pi pi-save" 
                 className="p-button-secondary" 
                 onClick={handleSubmit} 
               />
@@ -158,7 +158,7 @@ const UnicornsView = ({
       <div className="col-12">
         <Card className="shadow-2">
           <DataTable 
-            value={unicorns} 
+            value={unicorns}  // Pasamos la lista de unicornios
             scrollable 
             scrollHeight="flex"
             emptyMessage="No se encontraron unicornios"
