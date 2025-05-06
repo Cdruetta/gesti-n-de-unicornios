@@ -6,7 +6,7 @@ import { Card } from 'primereact/card';
 import { Toast } from 'primereact/toast';
 import { useRef } from 'react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const UnicornsView = ({
   unicorns,
@@ -30,7 +30,7 @@ const UnicornsView = ({
 
   const confirmDelete = (id) => {
     if (window.confirm('¿Estás seguro de eliminar este unicornio?')) {
-      onDelete(id);  // Llamada a la función de eliminación
+      onDelete(id);  
       toast.current?.show({
         severity: 'success',
         summary: 'Éxito',
@@ -42,25 +42,46 @@ const UnicornsView = ({
 
   const exportUnicornToPDF = (unicorn) => {
     const doc = new jsPDF();
-
-    doc.setFontSize(16);
-    doc.setTextColor(40);
-    doc.text(`Ficha Técnica de ${unicorn.name}`, 15, 15);
-
+  
+    
+    doc.setFillColor(100, 149, 237); 
+    doc.rect(0, 0, 210, 30, 'F'); 
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Ficha Técnica' , 105, 20, { align: 'center' });
+  
+    
     try {
-      doc.addImage('/public/logo.jpg', 150, 10, 40, 40);
+      doc.addImage('/logo.png', 'PNG', 160, 1, 28, 28); 
     } catch (e) {
       console.warn("No se pudo cargar la imagen.");
     }
-
+  
+    
     doc.setFontSize(12);
-    doc.text(`Nombre: ${unicorn.name}`, 15, 35);
-    doc.text(`Color: ${unicorn.color}`, 15, 45);
-    doc.text(`Edad: ${unicorn.age}`, 15, 55);
-    doc.text(`Poder: ${unicorn.power}`, 15, 65);
-
+    doc.setTextColor(0);
+    autoTable(doc, {
+      startY: 40, 
+      margin: { left: 15, right: 15 },
+      head: [['Campo', 'Valor']],
+      body: [
+        ['Nombre', unicorn.name],
+        ['Color', unicorn.color],
+        ['Edad', unicorn.age],
+        ['Poder', unicorn.power],
+      ],
+      theme: 'grid',
+      styles: { fontStyle: 'normal', halign: 'left' },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold' }
+    });
+  
+    
+    doc.setFontSize(10);
+    doc.text(`Generado por GCsoft - ${new Date().toLocaleDateString()}`, 15, 290);
+  
     doc.save(`unicornio_${unicorn.name.replace(/\s+/g, '_')}.pdf`);
-
+  
     toast.current?.show({
       severity: 'success',
       summary: 'PDF generado',
@@ -89,7 +110,7 @@ const UnicornsView = ({
       <Button
         icon="pi pi-trash"
         className="p-button-rounded p-button-danger p-button-sm"
-        onClick={() => confirmDelete(rowData.id)}  // Confirmar y eliminar
+        onClick={() => confirmDelete(rowData._id)}  // Confirmar y eliminar
         tooltip="Eliminar"
       />
     </div>
@@ -102,7 +123,7 @@ const UnicornsView = ({
       {/* Formulario de creación/edición de unicornio */}
       <div className="col-12 flex justify-content-center">
         <Card className="shadow-2 p-fluid mb-4" style={{ maxWidth: '500px' }}>
-          <h3>{editingId ? 'Editar Unicornio' : 'Nuevo Unicornio'}</h3>
+          <h2>{editingId ? 'Editar Unicornio' : 'Nuevo Unicornio'}</h2>
 
           <div className="grid formgrid p-fluid">
             <div className="field col-12">
@@ -145,7 +166,7 @@ const UnicornsView = ({
             <div className="col-12 flex justify-content-end">
               <Button 
                 label={editingId ? 'Actualizar Unicornio' : 'Crear Unicornio'} 
-                icon="pi pi-save" 
+                icon="pi pi-+plus" 
                 className="p-button-secondary" 
                 onClick={handleSubmit} 
               />
@@ -158,7 +179,7 @@ const UnicornsView = ({
       <div className="col-12">
         <Card className="shadow-2">
           <DataTable 
-            value={unicorns}  // Pasamos la lista de unicornios
+            value={unicorns}  
             scrollable 
             scrollHeight="flex"
             emptyMessage="No se encontraron unicornios"
