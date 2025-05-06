@@ -1,5 +1,5 @@
 <h1 align="center">Gestión de Unicornios</h1>
-<p align="center">Una app mágica para administrar unicornios con estilo — construida con React + Vite + PrimeReact</p>
+<p align="center">Una app  administrar unicornios y productos — construida con React + Vite + PrimeReact</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-18-blue?style=flat-square" alt="React" />
