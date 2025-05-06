@@ -44,16 +44,22 @@ function App() {
     {
       label: 'Contacto',
       icon: 'pi pi-envelope',
-      command: () => navigate('/contact')
+      href: 'mailto:contacto@gcsoft.com'
     }
   ];
+  
 
   return (
     <PrimeReactProvider>
       <div className="flex flex-column min-h-screen">
         <Menubar 
           model={navItems}
-          start={<span className="text-xl font-bold">Mi App</span>}
+          end={
+            <div className="flex align-items-center">
+              <img src="/logo.png" alt="Logo" width="60" height="60" />
+            </div>
+          }
+          start={<span className="text-xl font-bold"></span>}
           className="shadow-2"
         />
 
@@ -77,18 +83,29 @@ function App() {
             <div className="flex align-items-center gap-3">
               <span className="text-sm">© 2023 GCsoft</span>
             </div>
-            <div className="flex gap-4">
+              <div className="flex gap-4">
               {footerItems.map((item, index) => (
-                <a 
-                  key={index} 
-                  onClick={item.command} 
-                  className="cursor-pointer text-sm flex align-items-center gap-1"
-                >
-                  {item.icon && <i className={`pi ${item.icon}`}></i>}
-                  {item.label}
-                </a>
-              ))}
-            </div>
+                  item.href ? (
+                    <a 
+                      key={index}
+                      href={item.href}
+                      className="cursor-pointer text-sm flex align-items-center gap-1"
+                    >
+                      {item.icon && <i className={`pi ${item.icon}`}></i>}
+                      {item.label}
+                    </a>
+                  ) : (
+                    <span 
+                      key={index}
+                      onClick={item.command}
+                      className="cursor-pointer text-sm flex align-items-center gap-1"
+                    >
+                      {item.icon && <i className={`pi ${item.icon}`}></i>}
+                      {item.label}
+                    </span>
+                  )
+                ))}
+              </div>
           </div>
         </div>
       </div>

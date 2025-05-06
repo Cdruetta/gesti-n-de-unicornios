@@ -8,8 +8,8 @@ const HomeView = () => {
 
   return (
     <div className="home-container">
-      <Card title="GCinsumos" className="home-card">
-        <p>Gestión Integrada de Unicornios y Productos</p>
+      <Card title="Dashboard de Gestión" className="home-card">
+        <p>Monitoreo Integrado de Unicornios y Productos</p>
         
         <div className="flex gap-3 mt-4">
           <Button 
